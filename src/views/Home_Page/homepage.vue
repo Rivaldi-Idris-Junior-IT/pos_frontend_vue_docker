@@ -271,12 +271,12 @@
                                     <div class="mr-auto">
                                         <small>
                                             <h6>Cashier :<span> Pevita Pearce</span></h6>
-                                            <input type="hidden" class="form-control" v-model="checkout.namaCashier">
+                                            <input type="hidden" class="form-control" >
                                         </small>
                                     </div>
                                     <div class="ml-auto">
                                         <h6 style="margin-left:130px;">Receipt no: <span>#010410919</span></h6>
-                                        <input type="hidden" class="form-control" v-model="checkout.codeCheckout">
+                                        <input type="hidden" class="form-control">
                                     </div>
                                 </div>
                                 <div class="modal-information form-inline mt-3" v-for="item in listCart" :key="item.id">
@@ -295,7 +295,7 @@
                                     </div>
                                     <div class="modal-price ml-auto">
                                         <h5>Rp. <span>10500</span></h5>
-                                        <input type="hidden" class="form-control" v-model="checkout.checkoutPpn">
+                                        <input type="hidden" class="form-control" >
                                     </div>
                                 </div>
                                 <div class="modal-information form-inline mt-3 ">
@@ -304,7 +304,7 @@
                                     </div>
                                     <div class="modal-price">
                                         <h5>Rp. <span>{{ totalAll() }}</span></h5>
-                                        <input type="hidden" class="form-control" v-model="checkout.totalCheckout">
+                                        <input type="hidden" class="form-control" >
                                     </div>
                                 </div>
                                 <div class="modal-information form-inline mt-3 ">
@@ -312,7 +312,7 @@
                                         <h5>Payment :<span> Cash</span></h5>
                                     </div>
                                 </div>
-                                <input type="hidden" class="form-control" v-model="checkout.dateCheckout">
+                                <input type="hidden" class="form-control" >
                                 <div class="modal-footer" style="display:flex; flex-direction:column;">
                                     <button type="submit"
                                         class="btn btn-secondary btn-block btn-checkout-print">Print</button>
@@ -358,13 +358,7 @@
                     kategori_id: '',
                     link_gambar: ''
                 },
-                checkout : {
-                    invoices : '',
-                    cashier : '',
-                    date : '',
-                    orders : '',
-                    amount : ''                    
-                },
+                
             }
         },
         methods: {
@@ -387,16 +381,19 @@
                     })
             },
             saveCheckout() {
-                console.log("Masuk")
-                axios.post("http://localhost:4500/history/", this.checkout)
-                    .then(() => {
-                        this.checkout.invoices = '#10928'
-                        this.checkout.cashier = 'Cashier 3'
-                        this.checkout.date = '2020-09-15',
-                        this.checkout.orders = 'Cake',
-                        this.checkout.amount = '130000',
+                let listOrder = this.listCart.reduce((a, b) => a + ',' + (b['nama'] || ''), '')
+                const amount = this.totalAll()
+                console.log(listOrder)
+                listOrder = listOrder.substr(listOrder.indexOf(",") + 1)
+                axios.post("http://localhost:4500/history/", {                    
+                        invoices : '#10928',
+                        cashier : 'Cashier 3',
+                        orders : listOrder,
+                        amount : amount
+                    })
+                    .then(() => {   
                         alert("Data Berhasil Disimpan")
-                        this.load()
+                        this.load()                                             
                     })
                     .catch(err => {
                         console.log(err)
@@ -447,10 +444,15 @@
                 this.data.sort((a, b) => a.nama > b.nama ? 1 : -1)
             },
             addToCart(item) {
+                const addedItem = this.listCart.find(product => product.id === item.id);
+                if(addedItem) {
+                    addedItem.qty++
+                }else{
                 this.listCart.push({
                     ...item,
-                    qty: 1
-                })
+                    qty: 1                    
+                    })
+                }
             },
             addQty(id) {
                 const currentItem = this.listCart.find((product) => product.id === id);
