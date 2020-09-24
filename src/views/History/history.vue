@@ -114,7 +114,7 @@
             }
         },
         mounted() {
-            axios.get("http://localhost:4500/history/")
+            axios.get("http://localhost:4500/backend/history/")
                 .then((res) => {
                     this.data = res.data
                 })

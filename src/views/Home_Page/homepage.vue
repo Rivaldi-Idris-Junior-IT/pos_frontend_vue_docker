@@ -48,7 +48,7 @@
                         </div>
                         <div class="card-menu">
                             <div class="card d-inline-block mt-5 mb-2" v-for="item in filteredData" :key="item.id">
-                                <img :src="item.link_gambar" alt="" width="250" height="200">
+                                <img :src="showImage(item.link_gambar)" alt="" width="250" height="200">
                                 <div class="card-body">
                                     <h5>{{ item.nama }}</h5>
                                     <h6><span>Rp.</span> {{ item.harga }}</h6>
@@ -88,7 +88,7 @@
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                             <div class="media" style="width:90%;">
-                                                <img class="mr-3" :src="item.link_gambar" width="150px" />
+                                                <img class="mr-3" :src="showImage(item.link_gambar)" width="150px" />
                                                 <div class="media-body">
                                                     <h6 class="mt-0">{{ item.nama }}</h6>
                                                     <button @click="reduceQty(item.id)"
@@ -131,7 +131,7 @@
                             <div class="modal-title mt-3">
                                 <h3>Add item</h3>
                             </div>
-                            <form @submit.prevent="save">
+                            <form @submit.prevent="save" enctype="multipart/form-data">
                                 <div class="form-group row mt-3">
                                     <label for="name" class="col-sm-2 col-form-label">
                                         <h6>Name</h6>
@@ -145,7 +145,11 @@
                                         <h6>Image</h6>
                                     </label>
                                     <div class="col-sm-10">
-                                        <input type="text" v-model="form.link_gambar" class="form-control" id="image">
+                                        <div class="imagePreviewWrapper"
+                                            :style ="{'background-image' : `url(${previewImage})`}"
+                                            @click ="selectImage">
+                                        </div>
+                                        <input type="file" @input="pickFile" ref="fileInput"  class="form-control" id="image">
                                     </div>
                                 </div>
                                 <div class="form-group row mt-3">
@@ -336,16 +340,17 @@
     export default {
         name: 'HomePage',
         components: {},
-        data() {
+        data() {            
             return {
+                previewImage: null,
                 value: 1,
                 form: {
                     id: '',
                     nama: '',
-                    harga: '',
-                    stok: '',
+                    harga: '',                    
                     kategori_id: '',
-                    link_gambar: ''
+                    link_gambar: '',
+                    stok: ''
                 },
                 data: [],
                 search: '',
@@ -360,8 +365,23 @@
                 },
                 
             }
-        },
-        methods: {
+        },        
+        methods: {                     
+            selectImage (){
+                this.$refs.fileInput.click()
+            },
+            pickFile () {
+                let input = this.$refs.fileInput
+                let file = input.files
+                if (file && file[0]) {
+                let reader = new FileReader
+                reader.onload = e => {
+                    this.previewImage = e.target.result
+                }
+                reader.readAsDataURL(file[0])
+                this.$emit('input', file[0])
+                }
+            },
             goToHistory(data) {
                 this.$router.push({ path: "/history", params: {data} })
             },
@@ -369,16 +389,27 @@
                 this.$router.push({ path: "/", params: {data} })
             },            
             save() {
-                axios.post(process.env.VUE_APP_URL, this.form)
-                    .then(() => {
-                        this.form.nama = ''
-                        this.form.harga = ''
-                        this.form.stok = ''
-                        this.form.kategori_id = ''
-                        this.form.link_gambar = ''
-                        alert("Data Berhasil Disimpan")
-                        this.load()
-                    })
+                const productData = new FormData()
+                productData.append ('nama', this.form.nama)
+                productData.append ('harga', this.form.nama)
+                productData.append ('kategori_id', this.form.harga)
+                productData.append ('link_gambar', this.$refs.fileInput.files[0])
+                productData.append ('stok', this.form.stok)
+                const axiosConfig = { 
+                    method : 'POST',
+                    url : process.env.VUE_APP_URL,
+                    headers: {
+                        'Content-Type' : 'multipart/form-data'
+                    },
+                    data : productData
+                }
+                axios(axiosConfig)
+                .then(() => {
+                    this.load()
+                })
+                .catch(err => {
+                    console.log(err)
+                })
             },
             saveCheckout() {
                 let listOrder = this.listCart.reduce((a, b) => a + ',' + (b['nama'] || ''), '')
@@ -478,7 +509,11 @@
             totalAll() {
                 const ppn = 10500;
                 return this.listCart.reduce((a, b) => a + b.qty * b.harga + ppn, 0)
-            }
+            },
+            showImage(link_gambar) {
+                console.log(this.showImage)
+            return `${"http://localhost:4500"}/${link_gambar}`;
+            },
         },
         mounted() {
             axios.get(process.env.VUE_APP_URL)
@@ -488,13 +523,13 @@
                 .catch((err) => {
                     console.log(err)
                 })
-        },
+        },             
         computed: {
             filteredData: function () {
                 return this.data.filter((product) => {
                     return product.nama.match(this.search);
                 });
-            }
+            }            
         },
     }
 </script>
@@ -662,7 +697,7 @@
 
     /* Modal  */
 
-    /* Modal Checkout */
+    /* Modal Checkout */    
     .modal-button-added {
         background-color: transparent;
         border: none;
@@ -677,6 +712,16 @@
         height: 40px;
         margin-left: -5px;
         border: none;
+    }
+
+    .imagePreviewWrapper {
+    width: 250px;
+    height: 250px;
+    display: block;
+    cursor: pointer;
+    margin: 0 auto 30px;
+    background-size: cover;
+    background-position: center center;
     }
 
     /* end modal checkout */
@@ -705,7 +750,9 @@
 
     @media (max-width:575.98px) {
         .navbar {
-            width: 100%;
-        }
+        background-color: #FFFFFF;
+        width: 100%;
+
+    }
     }
 </style>
