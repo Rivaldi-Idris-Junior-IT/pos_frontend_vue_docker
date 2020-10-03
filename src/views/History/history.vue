@@ -25,9 +25,9 @@
                                         height="40"></a>                                
                             </div>
                         </div>
-                        <div class="col-md-11 mt-1">
-                            <div class="card-list d-inline-block pt-3 pr-1">
-                                <div class="card pt-3 d-inline-block card-income">
+                        <div class="col-md-10 mt-1">
+                            <div class="card-list mb-3 d-inline-block pt-3 pr-1">
+                                <div class="card col-md-6 pt-3 d-inline-block card-income">
                                     <div class="card-body">
                                         <small>
                                             <h6>Todays Income</h6>
@@ -38,7 +38,7 @@
                                         </small>
                                     </div>
                                 </div>
-                                <div class="card pt-3 d-inline-block card-orders">
+                                <div class="card col-md-6 pt-3 d-inline-block card-orders">
                                     <div class="card-body">
                                         <small>
                                             <h6>Todays Income</h6>
@@ -49,7 +49,7 @@
                                         </small>
                                     </div>
                                 </div>
-                                <div class="card pt-3 d-inline-block card-year-income">
+                                <div class="card col-md-6 pt-3 d-inline-block card-year-income">
                                     <div class="card-body">
                                         <small>
                                             <h6>Todays Income</h6>
@@ -67,19 +67,19 @@
                                     <thead>
                                         <tr>
                                             <th scope="col">Invoices</th>
-                                            <th scope="col">Cashier</th>
-                                            <th scope="col">Date</th>
+                                            <th scope="col">Cashier</th>                                            
                                             <th scope="col">Orders</th>
                                             <th scope="col">Amount</th>
+                                            <th scope="col">Date</th>
                                         </tr>
                                     </thead>
                                     <tbody v-for="item in data" :key="item.id">
                                     <tr>
                                         <th scope="row">{{ item.invoices }}</th>
-                                        <th scope="row">{{ item.cashier }}</th>
-                                        <th scope="row">{{ item.date }}</th>
+                                        <th scope="row">{{ item.cashier }}</th>                                        
                                         <th scope="row">{{ item.orders }}</th>
                                         <th scope="row">{{ item.amount }}</th>
+                                        <th scope="row">{{ item.date }}</th>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -172,42 +172,46 @@
 
 
     /* Main bar */
-    .col-md-11 {
+    .col-md-10 {
         padding-left: 20px;
-        flex-wrap: wrap;
         display: flex;
-        height: 120vh;
-
+        flex-wrap: wrap;
+        height: 120vh; 
     }
 
-    .col-md-11 .card-list {
+    .col-md-10 .card-list {
         margin-left: -10px;
     }
 
-    .col-md-11 .card-list .card {
+    .col-md-10 .card-list .card {
         width: 402px;
         height: 213px;
     }
 
-    .col-md-11 .card-list .card-income {
+    .col-md-10 .card-list .card-income {
         background: linear-gradient(278.29deg, #FBB2B4 30.05%, rgba(255, 143, 178, 0) 133.19%);
         filter: drop-shadow(10px 15px 10px rgba(255, 143, 178, 0.25));
         border-radius: 10px;
-
+        width: 65vh;
+        height: 100%;
     }
 
-    .col-md-11 .card-list .card-orders {
+    .col-md-10 .card-list .card-orders {
         background: linear-gradient(278.29deg, #29DFFF 30.05%, rgba(41, 223, 255, 0) 133.19%);
         filter: drop-shadow(10px 15px 10px rgba(41, 223, 255, 0.25));
         border-radius: 10px;
         margin-left: 5px;
+        width: 65vh;
+        height: 100%;
     }
 
-    .col-md-11 .card-list .card-year-income {
+    .col-md-10 .card-list .card-year-income {
         background: linear-gradient(278.29deg, #AB84C8 30.05%, rgba(241, 201, 236, 0) 133.19%);
         filter: drop-shadow(10px 15px 10px rgba(241, 201, 236, 0.25));
         border-radius: 10px;
-        margin-left: 5px;
+        margin-left: 5px;        
+        width: 65vh;
+        height: 100%;
     }
 
     .mytable .table {

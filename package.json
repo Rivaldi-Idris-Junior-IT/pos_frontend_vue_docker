@@ -12,12 +12,16 @@
     "bootstrap": "^4.5.2",
     "bootstrap-vue": "^2.16.0",
     "core-js": "^3.6.5",
+    "es6-promise": "^4.2.8",
     "jwt-decode": "^3.0.0-beta.2",
     "portal-vue": "^2.1.7",
     "vue": "^2.6.12",
     "vue-jwt-decode": "^0.1.0",
+    "vue-localstorage": "^0.6.2",
     "vue-number-input-spinner": "^2.2.0",
-    "vue-router": "^3.4.3"
+    "vue-promise": "^1.0.0",
+    "vue-router": "^3.4.3",
+    "vuex": "^3.5.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

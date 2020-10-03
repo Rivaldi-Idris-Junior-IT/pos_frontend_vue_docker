@@ -9,17 +9,19 @@
                             <img src="../../assets/login/undraw_business_shop_qw5t.svg" width="150" height="150" alt="">
                         </div>
                         <div class="card-body">
-                            <div class="form-group mt-3">
-                                <label for="">Username</label>
-                                <input type="text" class="form-control">
-                            </div>
-                            <div class="form-group mt-3">
-                                <label for="">Password</label>
-                                <input type="password" class="form-control">
-                            </div>
-                            <div class="form-group" style="margin-top: 30px;">
-                                <button type="submit" class="btn btn-primary btn-block">Login</button>
-                            </div>
+                            <form action="#" @submit.prevent="login">
+                                <div class="form-group mt-3">
+                                    <label for="">Username</label>
+                                    <input type="text" class="form-control" v-model="username" >
+                                </div>
+                                <div class="form-group mt-3">
+                                    <label for="">Password</label>
+                                    <input type="password" class="form-control" v-model="password">
+                                </div>
+                                <div class="form-group" style="margin-top: 30px;">
+                                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </section>
@@ -28,9 +30,27 @@
     </div>
 </template>
 
-<script>
-    export default {
+<script>    
 
+    export default {
+        name: 'login',
+        data(){
+            return {
+                username : '',
+                password : '',
+            }
+        },
+        methods: {
+            login(){
+                this.$store.dispatch('retrieveToken',{
+                    username: this.username,
+                    password: this.password,
+                })
+                .then(() => {
+                    this.$router.push({ path: '/' })
+                })
+            }
+        }        
     }
 </script>
 

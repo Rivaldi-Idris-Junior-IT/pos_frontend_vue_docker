@@ -8,7 +8,7 @@ Vue.use(VueRouter)
 import home_page from "./views/Home_Page/homepage"
 import history from "./views/History/history"
 import login from "./views/Auth/login"
-
+import logout from "./views/Auth/logout"
 
 
 const mainRouter = new VueRouter({
@@ -28,6 +28,11 @@ const mainRouter = new VueRouter({
             path : "/login",
             name : "Login",
             component: login,
+        },
+        {
+            path : "/logout",
+            name : "Logout",
+            component: logout,
         }
     ]
 })

@@ -20,7 +20,10 @@
                             <a href="#" @click="goToHomepage(data)"><img src="../../assets/images/fork.svg" alt="" width="40" height="40"></a>
                             <a href="#" @click="goToHistory(data)"><img src="../../assets/images/clipboard.svg" alt="" width="40" height="40"></a>
                             <button data-toggle="modal" data-target="#addedModal" class="modal-button-added"><img
-                                    src="../../assets/images/add.svg" alt=""></button>
+                                    src="../../assets/images/add.svg" alt="">
+                            </button>
+                            <a v-if="loggedIn" href="#" @click="goTologin(data)"><img src="../../assets/images/power.svg" alt="" width="40" height="40" style="color:red;"></a>
+                            <a v-if="!loggedIn" href="#" @click="goTologout(data)"><alt="" width="40" height="40" style="background-color:red;"></a>
                         </div>
                     </div>
                     <div class="col-md-8 mt-1">
@@ -182,7 +185,7 @@
 
                                 <div class="buttons-modal-decision mb-3 float-right">
                                     <button type="button" style="margin-right:20px;" class="btn btn-modal-cancel" data-dismiss="modal">Cancel</button>
-                                    <button type="submit" @click="goToHomepage(data)" class="btn btn-modal-add">Add</button>
+                                    <button type="submit" @click="goToHomepage(data)" class="btn btn-modal-add" >Add</button>
                                 </div>
                             </form>
                         </div>
@@ -386,8 +389,14 @@
                 this.$router.push({ path: "/history", params: {data} })
             },
             goToHomepage(data) {
-                this.$router.push({ path: "/", params: {data} })
+                this.$router.push({ path: "/", params: {data} }).catch(()=> {});
             },            
+            goTologin(data) {
+                this.$router.push({ path: "/login", params: {data} })
+            },
+            goTologout(data) {
+                this.$router.push({ path: "/logout", params: {data} })
+            },
             save() {
                 const productData = new FormData()
                 productData.append ('nama', this.form.nama)
@@ -416,7 +425,7 @@
                 const amount = this.totalAll()
                 console.log(listOrder)
                 listOrder = listOrder.substr(listOrder.indexOf(",") + 1)
-                axios.post("http://localhost:4500/history/", {                    
+                axios.post("http://localhost:4500/backend/history/", {                    
                         invoices : '#10928',
                         cashier : 'Cashier 3',
                         orders : listOrder,
@@ -518,7 +527,7 @@
         mounted() {
             axios.get(process.env.VUE_APP_URL)
                 .then((res) => {
-                    this.data = res.data
+                    this.data = res.data.result
                 })
                 .catch((err) => {
                     console.log(err)
@@ -529,7 +538,10 @@
                 return this.data.filter((product) => {
                     return product.nama.match(this.search);
                 });
-            }            
+            },
+            loggedIn() {
+                return this.$store.getters.loggedIn
+            }
         },
     }
 </script>
