@@ -420,12 +420,13 @@
                     console.log(err)
                 })
             },
+            // process.env.VUE_APP_URL + `/product/`
             saveCheckout() {
                 let listOrder = this.listCart.reduce((a, b) => a + ',' + (b['nama'] || ''), '')
                 const amount = this.totalAll()
                 console.log(listOrder)
                 listOrder = listOrder.substr(listOrder.indexOf(",") + 1)
-                axios.post("http://localhost:4500/backend/history/", {                    
+                axios.post(process.env.VUE_APP_URL + history/ {                    
                         invoices : '#10928',
                         cashier : 'Cashier 3',
                         orders : listOrder,
@@ -438,15 +439,17 @@
                     .catch(err => {
                         console.log(err)
                     })                              
-            },
+            },            
             hapus: function (item) {
-                axios.delete(process.env.VUE_APP_URL + `/delete/${item.id}`)
-                    .then(() => {
-                        alert('deleted')
-                        this.load()
+                axios.delete(process.env.VUE_APP_URL+ `product/delete/${item.id}`)
+                    .then(() => {   
+                        alert('deleted')                     
                         this.form.nama = ''
-                        this.clean()
-
+                        this.clean()                        
+                        this.load()
+                    })             
+                    .catch(err => {
+                        console.log(err)
                     })                    
             },
             edit(item) {
@@ -462,7 +465,7 @@
                 this.edit_data = data
             },
             update() {
-                axios.put(process.env.VUE_APP_URL, this.edit_data)
+                axios.put(process.env.VUE_APP_URL + `product/`, this.edit_data)
                     .then(() => {
                         alert("Masuk")
                         this.load()
@@ -519,13 +522,12 @@
                 const ppn = 10500;
                 return this.listCart.reduce((a, b) => a + b.qty * b.harga + ppn, 0)
             },
-            showImage(link_gambar) {
-                console.log(this.showImage)
+            showImage(link_gambar) {                
             return `${"http://localhost:4500"}/${link_gambar}`;
             },
         },
         mounted() {
-            axios.get(process.env.VUE_APP_URL)
+            axios.get(process.env.VUE_APP_URL + `product/`)
                 .then((res) => {
                     this.data = res.data.result
                 })
