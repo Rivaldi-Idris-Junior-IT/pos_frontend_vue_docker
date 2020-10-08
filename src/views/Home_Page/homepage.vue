@@ -426,7 +426,7 @@
                 const amount = this.totalAll()
                 console.log(listOrder)
                 listOrder = listOrder.substr(listOrder.indexOf(",") + 1)
-                axios.post(process.env.VUE_APP_URL + history/ {                    
+                axios.post(process.env.VUE_APP_URL + history, {
                         invoices : '#10928',
                         cashier : 'Cashier 3',
                         orders : listOrder,
@@ -523,7 +523,7 @@
                 return this.listCart.reduce((a, b) => a + b.qty * b.harga + ppn, 0)
             },
             showImage(link_gambar) {                
-            return `${"http://localhost:4500"}/${link_gambar}`;
+            return `${process.env.VUE_APP_STATIC_URL}/${link_gambar}`;
             },
         },
         mounted() {

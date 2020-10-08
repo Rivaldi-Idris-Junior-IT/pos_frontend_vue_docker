@@ -16,6 +16,11 @@ const mainRouter = new VueRouter({
     routes: [
         {
             path : "/",
+            name : "Login",
+            component: login,
+        },
+        {
+            path : "/homepage",
             name : "HomePage",
             component: home_page,
         },
@@ -23,12 +28,7 @@ const mainRouter = new VueRouter({
             path : "/history",
             name : "History",
             component: history,
-        },
-        {
-            path : "/login",
-            name : "Login",
-            component: login,
-        },
+        },        
         {
             path : "/logout",
             name : "Logout",

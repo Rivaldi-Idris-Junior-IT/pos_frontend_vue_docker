@@ -23,9 +23,9 @@ export const store = new Vuex.Store({
     actions: {
         
         retrieveToken(context, credentials) {
-
+//axios.delete(process.env.VUE_APP_URL+ `product/delete/${item.id}`)
             return new Promise((resolve, reject) => {
-                axios.post('http://localhost:4500/backend/auth', {
+                axios.post(process.env.VUE_APP_URL+ `auth`,  {
                     username: credentials.username,
                     password: credentials.password,
                 })
