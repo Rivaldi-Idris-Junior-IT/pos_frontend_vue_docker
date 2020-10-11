@@ -1,4 +1,5 @@
-def branch
+def builderDocker
+def CommitHash
 
 pipeline {
     agent any
@@ -11,8 +12,9 @@ pipeline {
   stages {
     stage('Build Project') {
       steps {
-       nodejs("node12")
-       sh 'npm install'
+            nodejs("node12") {
+            sh 'npm install'
+            }
       }
     }
 
@@ -33,7 +35,11 @@ pipeline {
             }
         }
         steps {
-        echo 'Testing...'
+            script {
+                builderDocker.inside {
+                    sh 'echo passed'
+                }
+            }
         }
    }
 
@@ -43,9 +49,10 @@ pipeline {
                params.CICD == 'CICD'
            }
        }
+       
        steps {
-        echo 'Deploy...'
-        }
+         echo 'Deploy...'
+       }
    }
 
   }
