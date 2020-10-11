@@ -18,7 +18,7 @@ pipeline {
    stage('Run Testing') {
         when {
             expression {
-                BRANCH NAME == "mater" || BRANCH_NAME == "staging"
+                params.RUNTEST
             }
         }
         steps {
@@ -27,9 +27,14 @@ pipeline {
    }
 
    stage('Deploy') {
-       steps {
-           echo 'Testing...'
+       when {
+           expression {
+               params.CICD = 'CICD'
+           }
        }
+       steps {
+        echo 'Deploy...'
+        }
    }
 
   }
