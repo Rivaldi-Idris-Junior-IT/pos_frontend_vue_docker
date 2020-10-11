@@ -29,7 +29,7 @@ pipeline {
    stage('Deploy') {
        when {
            expression {
-               params.CICD = 'CICD'
+               params.CICD == 'CICD'
            }
        }
        steps {
