@@ -23,7 +23,7 @@ pipeline {
        steps{
            script {
                 CommitHash = sh (script : "git log -n 1 --pretty=format:'%H'", returnStdout:true)
-                builderDocker = docker.build("frontend:${CommitHash}")
+                builderDocker = docker.build("aldifarzum/frontend:${CommitHash}")
            }
        }
    }
@@ -39,6 +39,19 @@ pipeline {
                 builderDocker.inside {
                     sh 'echo passed'
                 }
+            }
+        }
+   }
+
+   stage('Push Image') {
+        when {
+            expression {
+                params.RUNTEST
+            }
+        }
+        steps {
+            script {
+                builderDocker,push("${env.GIT_BRANCH}")
             }
         }
    }
