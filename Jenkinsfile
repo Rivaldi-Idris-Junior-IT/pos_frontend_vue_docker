@@ -10,7 +10,7 @@ pipeline {
 
   stages {
     stage('Build Project') {
-      step {
+      steps {
        echo 'build...'
       }
     }
@@ -21,13 +21,13 @@ pipeline {
                 BRANCH NAME == "mater" || BRANCH_NAME == "staging"
             }
         }
-        step {
+        steps {
         echo 'Testing...'
         }
    }
 
    stage('Deploy') {
-       step {
+       steps {
            echo 'Testing...'
        }
    }
