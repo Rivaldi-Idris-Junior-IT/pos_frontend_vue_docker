@@ -11,9 +11,19 @@ pipeline {
   stages {
     stage('Build Project') {
       steps {
-       echo 'build...'
+       nodejs("nodejs12")
+       sh 'npm install'
       }
     }
+
+   stage('Build Docker Images') {
+
+       steps{
+           script {
+                CommitHash = sh (script : "git log -n 1 --pretty=format:'%H'", returnStdout:true)
+           }
+       }
+   }
 
    stage('Run Testing') {
         when {
