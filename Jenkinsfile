@@ -3,7 +3,7 @@ def branch
 pipeline {
     agent any
 
-    paramaters {
+    parameters {
        booleanParam(name:'RUNTEST',defaultValue: true, description: 'Toggle this value for testing')
        choice(name:'CICD',choices: ['CI', 'CICD'], description: 'Pick something')       
     } 
