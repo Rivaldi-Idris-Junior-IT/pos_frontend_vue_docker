@@ -64,7 +64,22 @@ pipeline {
        }
        
        steps {
-         echo 'Deploy...'
+        script {
+            sshPublisher(
+                publishers: [
+                    sshPublisherDesc(
+                         configName: 'Development'
+                         verbose: false,
+                        transfers: [                                 
+                            sshTransfer(
+                                execCommand: 'docker pull aldifarzum/dockerpos-frontend:master; docker kill frontend; docker run -d --rm --name frontend -p 8080:80 aldifarzum/dockerpos-frontend:master',
+                                execTimeout: 120000,
+                            )
+                        ]
+                    )
+                ]
+            )
+        }
        }
    }
 
