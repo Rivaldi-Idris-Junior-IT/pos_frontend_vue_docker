@@ -20,15 +20,19 @@ pipeline {
     }
 
    stage('Build Docker Images') {
-       if (params.Mode == '${CommitHash}'){
-            script {
-                CommitHash = sh (script : "git log -n 1 --pretty=format:'%H'", returnStdout:true)
-                builderDocker = docker.build("aldifarzum/dockerpos-frontend:${CommitHash}")
+       steps{
+           script {
+               if (params.Mode == '${CommitHash}'){
+                    script {
+                        CommitHash = sh (script : "git log -n 1 --pretty=format:'%H'", returnStdout:true)
+                        builderDocker = docker.build("aldifarzum/dockerpos-frontend:${CommitHash}")
+                }
+                }else if (params.Mode != '${CommitHash}') {
+                    currentBuild.result = 'ABORTED'
+                    error('Stopping early…')
+                }                       
            }
-        }else if (params.Mode != '${CommitHash}') {
-            currentBuild.result = 'ABORTED'
-            error('Stopping early…')
-        }                       
+       }       
    }
 
    stage('Run Testing') {
