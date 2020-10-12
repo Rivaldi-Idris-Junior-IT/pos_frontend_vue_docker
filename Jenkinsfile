@@ -20,13 +20,15 @@ pipeline {
     }
 
    stage('Build Docker Images') {
-
-       steps{
-           script {
+       if (params.Mode == '${CommitHash}'){
+            script {
                 CommitHash = sh (script : "git log -n 1 --pretty=format:'%H'", returnStdout:true)
                 builderDocker = docker.build("aldifarzum/dockerpos-frontend:${CommitHash}")
            }
-       }
+        }else{
+            currentBuild.result = 'ABORTED'
+            error('Stopping early…')
+        }                       
    }
 
    stage('Run Testing') {
@@ -45,12 +47,16 @@ pipeline {
    }
 
    stage('Push Image') {
-        if (params.Mode == '${CommitHash}'){
-            builderDocker.push("${env.GIT_BRANCH}")
-        }else{
-            currentBuild.result = 'ABORTED'
-            error('Branch tidak sesuai')
-        }                
+        when {
+            expression {
+                params.RUNTEST
+            }
+        }
+        steps {
+            script {
+                builderDocker.push("${env.GIT_BRANCH}")
+            }
+        }
    }
 
    stage('Deploy') {
