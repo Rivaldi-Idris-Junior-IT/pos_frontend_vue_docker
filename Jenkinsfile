@@ -11,21 +11,20 @@ pipeline {
        choice(name:'Mode',choices: ['Dev', 'Production'], description: 'Pilih dijalankan dalam mode apa ?')
     } 
 
-  stages {
-        stage('Build Project') {
-        steps {
-                nodejs("node12") {
-                sh 'npm install'
-                }
-            }
-        }
-    }
 
     stages {
         when{
             expression {
                 params.Mode == 'Production'
             }
+        }
+
+        stage('Build Project') {
+                steps {
+                    nodejs("node12") {
+                    sh 'npm install'
+                    }
+                }
         }
 
         stage('Build Docker Image') {
@@ -101,6 +100,14 @@ pipeline {
             expression {
                 params.Mode == 'Dev'
             }
+        }
+
+        stage('Build Project') {
+                steps {
+                    nodejs("node12") {
+                    sh 'npm install'
+                    }
+                }
         }
 
         stage('Build Docker Image') {
