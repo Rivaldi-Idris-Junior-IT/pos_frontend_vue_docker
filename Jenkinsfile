@@ -6,7 +6,8 @@ pipeline {
 
     parameters {
        booleanParam(name:'RUNTEST',defaultValue: true, description: 'Toggle this value for testing')
-       choice(name:'CICD',choices: ['CI', 'CICD'], description: 'Pick something')       
+       choice(name:'CICD',choices: ['CI', 'CICD'], description: 'Pick something')
+       choice(name:'Mode',choices: ['master', 'production'], description: 'Pili mode push')
     } 
 
   stages {
@@ -19,13 +20,20 @@ pipeline {
     }
 
    stage('Build Docker Images') {
-
        steps{
            script {
-                CommitHash = sh (script : "git log -n 1 --pretty=format:'%H'", returnStdout:true)
-                builderDocker = docker.build("aldifarzum/dockerpos-frontend:${CommitHash}")
+               if (params.Mode == GIT_BRANCH ){
+                    script {
+                        CommitHash = sh (script : "git log -n 1 --pretty=format:'%H'", returnStdout:true)
+                        builderDocker = docker.build("aldifarzum/dockerpos-frontend:GIT_BRANCH")
+                    }
+                    sh 'echo Validasi branch berhasil'
+                }else if (params.Mode != GIT_BRANCH) {
+                    currentBuild.result = 'ABORTED'
+                    error('Validasi branch gagal …')
+                }                       
            }
-       }
+       }       
    }
 
    stage('Run Testing') {
