@@ -25,7 +25,7 @@ pipeline {
                 CommitHash = sh (script : "git log -n 1 --pretty=format:'%H'", returnStdout:true)
                 builderDocker = docker.build("aldifarzum/dockerpos-frontend:${CommitHash}")
            }
-        }else{
+        }else if (params.Mode != '${CommitHash}') {
             currentBuild.result = 'ABORTED'
             error('Stopping early…')
         }                       
