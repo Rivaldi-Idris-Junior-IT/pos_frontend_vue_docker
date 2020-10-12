@@ -1,10 +1,6 @@
 def builderDocker
 
 
-options {
-    skipDefaultCheckout true
-}
-
 pipeline {
     agent any
 
@@ -16,12 +12,13 @@ pipeline {
     } 
 
   stages {
-    stage('Build Project') {
-      steps {
-            nodejs("node12") {
-            sh 'npm install'
+        stage('Build Project') {
+        steps {
+                nodejs("node12") {
+                sh 'npm install'
+                }
             }
-      }
+        }
     }
 
     stages {
