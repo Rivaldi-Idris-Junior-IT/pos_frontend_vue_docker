@@ -5,9 +5,10 @@ pipeline {
     agent any
 
     parameters {
-       booleanParam(name:'RUNTEST',defaultValue: true, description: 'Toggle this value for testing')
-       choice(name:'CICD',choices: ['CI', 'CICD'], description: 'Pick something')
-       choice(name:'Mode',choices: ['master', 'production'], description: 'Pili mode push')
+        booleanParam(name: 'RUNTEST', defaultValue: true, description: 'Toggle this value for testing')
+        choice(name: 'Deploy', choices: ['production', 'deployement'], description: 'Deploy Other Server')
+        choice(name: 'CICD', choices: ['CI', 'CICD'], description: 'Pick something')
+        choice(name: 'Mode', choices: ['master', 'production'], description: 'Pili mode push')
     } 
 
   stages {
@@ -64,32 +65,64 @@ pipeline {
         }
    }
 
-   stage('Deploy') {
-       when {
-           expression {
-               params.CICD == 'CICD'
-           }
-       }
-       
-       steps {
-        script {
-            sshPublisher(
-                publishers: [
-                    sshPublisherDesc(
-                         configName: 'Development',
-                         verbose: false,
-                        transfers: [                                 
-                            sshTransfer(
-                                execCommand: 'docker pull aldifarzum/dockerpos-frontend:master; docker kill frontend; docker run -d --rm --name frontend -p 8080:80 aldifarzum/dockerpos-frontend:master',
-                                execTimeout: 120000,
+   stage('Deploy-process') {
+            if (params.Deploy == 'deployement') {
+
+                stage('Deploy-deployement') {
+                    when {
+                        expression {
+                            params.CICD == 'CICD'
+                        }
+                    }
+
+                    steps {
+                        script {
+                            sshPublisher(
+                                publishers: [
+                                    sshPublisherDesc(
+                                        configName: 'Development',
+                                        verbose: false,
+                                        transfers: [
+                                            sshTransfer(
+                                                execCommand: 'docker pull aldifarzum/dockerpos-frontend:${CommitHash}; docker kill frontend; docker run -d --rm --name frontend -p 8080:80 aldifarzum/dockerpos-frontend:${CommitHash}',
+                                                execTimeout: 120000,
+                                            )
+                                        ]
+                                    )
+                                ]
                             )
-                        ]
-                    )
-                ]
-            )
+                        }
+                    }
+                }
+            } else if (params.Deploy == 'production') {
+                stage('Deploy-production') {
+                    when {
+                        expression {
+                            params.CICD == 'CICD'
+                        }
+                    }
+
+                    steps {
+                        script {
+                            sshPublisher(
+                                publishers: [
+                                    sshPublisherDesc(
+                                        configName: 'Production',
+                                        verbose: false,
+                                        transfers: [
+                                            sshTransfer(
+                                                execCommand: 'docker pull aldifarzum/dockerpos-frontend:master; docker kill frontend; docker run -d --rm --name frontend -p 8080:80 aldifarzum/dockerpos-frontend:master',
+                                                execTimeout: 120000,
+                                            )
+                                        ]
+                                    )
+                                ]
+                            )
+                        }
+                    }
+                }
+            }
         }
-       }
-   }
 
   }
 }
