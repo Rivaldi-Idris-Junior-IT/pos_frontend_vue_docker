@@ -22,12 +22,12 @@ pipeline {
    stage('Build Docker Images') {
        steps{
            script {
-               if (params.Mode == '${CommitHash}'){
+               if (GIT_BRANCH == 'production'){
                     script {
                         CommitHash = sh (script : "git log -n 1 --pretty=format:'%H'", returnStdout:true)
                         builderDocker = docker.build("aldifarzum/dockerpos-frontend:${CommitHash}")
                 }
-                }else if (params.Mode != '${CommitHash}') {
+                }else if (GIT_BRANCH != 'production') {
                     currentBuild.result = 'ABORTED'
                     error('Stopping early…')
                 }                       
