@@ -8,7 +8,7 @@ pipeline {
         booleanParam(name: 'RUNTEST', defaultValue: true, description: 'Toggle this value for testing')
         choice(name: 'Deploy', choices: ['production', 'deployement'], description: 'Deploy Other Server')
         choice(name: 'CICD', choices: ['CI', 'CICD'], description: 'Pick something')
-        choice(name: 'Mode', choices: ['master', 'production'], description: 'Pili mode push')
+        choice(name: 'Mode', choices: ['latest', 'production'], description: 'Pili mode push')
     }
 
     stages {
@@ -26,7 +26,7 @@ pipeline {
                     if (params.Mode == GIT_BRANCH) {
                         script {
                             CommitHash = sh(script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)
-                            builderDocker = docker.build("aldifarzum/dockerpos-frontend:master")
+                            builderDocker = docker.build("aldifarzum/dockerpos-frontend:latest")
                         }
                         sh 'echo Validasi branch berhasil'
                     } else if (params.Mode != GIT_BRANCH) {
@@ -60,7 +60,7 @@ pipeline {
             }
             steps {
                 script {
-                    builderDocker.push("${env.GIT_BRANCH}")
+                    builderDocker.push("latest")
                 }
             }
         }
@@ -83,7 +83,7 @@ pipeline {
                                     verbose: false,
                                     transfers: [
                                         sshTransfer(
-                                            execCommand: 'docker pull aldifarzum/dockerpos-frontend:master; docker run -d --rm --name frontend -p 8080:80 aldifarzum/dockerpos-frontend:master',
+                                            execCommand: 'docker pull aldifarzum/dockerpos-frontend:latest; docker run -d --rm --name frontend -p 8080:80 aldifarzum/dockerpos-frontend:latest',
                                             execTimeout: 120000,
                                         )
                                     ]
@@ -98,7 +98,7 @@ pipeline {
                                     verbose: false,
                                     transfers: [
                                         sshTransfer(
-                                            execCommand: 'docker pull aldifarzum/dockerpos-frontend:master; docker kill master; docker run -d --rm --name frontend -p 8080:80 aldifarzum/dockerpos-frontend:master',
+                                            execCommand: 'docker pull aldifarzum/dockerpos-frontend:latest; docker kill latest; docker run -d --rm --name frontend -p 8080:80 aldifarzum/dockerpos-frontend:latest',
                                             execTimeout: 120000,
                                         )
                                     ]
