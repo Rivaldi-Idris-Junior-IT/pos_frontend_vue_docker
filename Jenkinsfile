@@ -7,6 +7,7 @@ pipeline {
     parameters {
         booleanParam(name: 'RUNTEST', defaultValue: true, description: 'Toggle this value for testing')        
         choice(name: 'CICD', choices: ['CI', 'CICD'], description: 'Pick something')        
+        choice(name: 'Mode', choices: ['master','development', 'production'], description: 'Pili mode push')
     }
 
     stages {
