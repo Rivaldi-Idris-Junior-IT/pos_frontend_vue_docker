@@ -7,8 +7,7 @@ pipeline {
     parameters {
         booleanParam(name: 'RUNTEST', defaultValue: true, description: 'Toggle this value for testing')
         choice(name: 'Deploy', choices: ['production', 'deployement'], description: 'Deploy Other Server')
-        choice(name: 'CICD', choices: ['CI', 'CICD'], description: 'Pick something')
-        choice(name: 'Mode', choices: ['master','development', 'production'], description: 'Pili mode push')
+        choice(name: 'CICD', choices: ['CI', 'CICD'], description: 'Pick something')        
     }
 
     stages {
@@ -74,42 +73,14 @@ pipeline {
                 }
             }
             steps {
-                script {
-                    if (params.Deploy == 'deployement') {
-                        sshPublisher(
-                            publishers: [
-                                sshPublisherDesc(
-                                    configName: 'Development',
-                                    verbose: false,
-                                    transfers: [
-                                        sshTransfer(
-                                            execCommand: 'docker pull aldifarzum/dockerpos-frontend:latest; docker run -d --rm --name frontend -p 8080:80 aldifarzum/dockerpos-frontend:latest',
-                                            execTimeout: 250000,
-                                        )
-                                    ]
-                                )
-                            ]
-                        )
-                    } else if (params.Deploy == 'production') {
-                        sshPublisher(
-                            publishers: [
-                                sshPublisherDesc(
-                                    configName: 'Production',
-                                    verbose: false,
-                                    transfers: [
-                                        sshTransfer(
-                                            execCommand: 'docker pull aldifarzum/dockerpos-frontend:latest; docker kill frontend; docker run -d --rm --name frontend -p 8080:80 aldifarzum/dockerpos-frontend:latest',
-                                            execTimeout: 250000,
-                                        )
-                                    ]
-                                )
-                            ]
-                        )
-                    }
+                script{
+                    sh 'echo Image already push to dockerhub'
                 }
             }
-
-
         }
+
+        stage('Remove local images') {
+        // remove docker images
+        sh("docker rmi -f aldifarzum/dockerpos-frontend:latest || :")        
     }
 }
