@@ -5,8 +5,7 @@ pipeline {
     agent any
 
     parameters {
-        booleanParam(name: 'RUNTEST', defaultValue: true, description: 'Toggle this value for testing')
-        choice(name: 'Deploy', choices: ['production', 'deployement'], description: 'Deploy Other Server')
+        booleanParam(name: 'RUNTEST', defaultValue: true, description: 'Toggle this value for testing')        
         choice(name: 'CICD', choices: ['CI', 'CICD'], description: 'Pick something')        
     }
 
@@ -80,7 +79,8 @@ pipeline {
         }
 
         stage('Remove local images') {
-        // remove docker images
-        sh("docker rmi -f aldifarzum/dockerpos-frontend:latest || :")        
+            // remove docker images
+            sh("docker rmi -f aldifarzum/dockerpos-frontend:latest || :")        
+        }
     }
 }
