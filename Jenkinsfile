@@ -79,9 +79,11 @@ pipeline {
         }
 
         stage('Remove local images') {
-            script{
+            steps {
+                script{
                 sh("docker rmi -f aldifarzum/dockerpos-frontend:latest || :")        
-            }            
+            }      
+            }                  
         }
     }
 }
