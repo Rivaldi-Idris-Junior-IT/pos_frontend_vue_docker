@@ -25,7 +25,7 @@ pipeline {
                     if (params.Mode == GIT_BRANCH) {
                         script {
                             CommitHash = sh(script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)
-                            builderDocker = docker.build("aldifarzum/dockerpos-frontend:latest")
+                            builderDocker = docker.build("aldifarzum/dockerpos-frontend:v1.0.0.1")
                         }
                         sh 'echo Validasi branch berhasil'
                     } else if (params.Mode != GIT_BRANCH) {
@@ -59,7 +59,7 @@ pipeline {
             }
             steps {
                 script {
-                    builderDocker.push("latest")
+                    builderDocker.push("v1.0.0.1")
                 }
             }
         }
@@ -82,7 +82,7 @@ pipeline {
         stage('Remove local images') {
             steps {
                 script{
-                sh("docker rmi -f aldifarzum/dockerpos-frontend:latest || :")        
+                sh("docker rmi -f aldifarzum/dockerpos-frontend:v1.0.0.1 || :")        
             }      
             }                  
         }
