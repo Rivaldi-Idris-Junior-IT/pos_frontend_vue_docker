@@ -23,6 +23,7 @@
                                     src="../../assets/images/add.svg" alt="">
                             </button>
                             <a v-if="loggedIn" href="#" @click="goTologin(data)"><img src="../../assets/images/power.svg" alt="" width="40" height="40" style="color:red;"></a>
+                            <a v-if="!loggedIn" href="#" @click="goTologout(data)"><alt="" width="40" height="40" style="background-color:red;"></a>
                         </div>
                     </div>
                     <div class="col-md-8 mt-1">
@@ -391,7 +392,7 @@
                 this.$router.push({ path: "/", params: {data} }).catch(()=> {});
             },            
             goTologin(data) {
-                this.$router.push({ path: "/login", params: {data} })
+                this.$router.push({ path: "/", params: {data} })
             },
             goTologout(data) {
                 this.$router.push({ path: "/logout", params: {data} })
@@ -440,7 +441,7 @@
                     })                              
             },            
             hapus: function (item) {
-                axios.delete(process.env.VUE_APP_URL+`product/delete/${item.id}`)
+                axios.delete(process.env.VUE_APP_URL+ `product/delete/${item.id}`)
                     .then(() => {   
                         alert('deleted')                     
                         this.form.nama = ''
