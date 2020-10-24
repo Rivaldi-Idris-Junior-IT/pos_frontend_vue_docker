@@ -103,7 +103,7 @@
                 this.$router.push({ path: "/history", params: {data} })
             },
             goToHomepage(data) {
-                this.$router.push({ path: "/", params: {data} })
+                this.$router.push({ path: "/homepage", params: {data} })
             },
         },
         components: {            
@@ -192,8 +192,8 @@
         background: linear-gradient(278.29deg, #FBB2B4 30.05%, rgba(255, 143, 178, 0) 133.19%);
         filter: drop-shadow(10px 15px 10px rgba(255, 143, 178, 0.25));
         border-radius: 10px;
-        width: 65vh;
-        height: 100%;
+        width: 350px;
+        height: 220px;
     }
 
     .col-md-10 .card-list .card-orders {
@@ -201,8 +201,8 @@
         filter: drop-shadow(10px 15px 10px rgba(41, 223, 255, 0.25));
         border-radius: 10px;
         margin-left: 5px;
-        width: 65vh;
-        height: 100%;
+        width: 350px;
+        height: 220px;
     }
 
     .col-md-10 .card-list .card-year-income {
@@ -210,8 +210,8 @@
         filter: drop-shadow(10px 15px 10px rgba(241, 201, 236, 0.25));
         border-radius: 10px;
         margin-left: 5px;        
-        width: 65vh;
-        height: 100%;
+        width: 350px;
+        height: 220px;
     }
 
     .mytable .table {
