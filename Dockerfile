@@ -5,7 +5,7 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 ENV VUE_APP_URL='http://52.87.153.27/backend/'
-ENV VUE_APP_STATIC_URL='http://52.87.153.27/backend'
+ENV VUE_APP_STATIC_URL='http://52.87.153.27/backend/public/upload/'
 RUN npm run build
 
 # Production stage 
