@@ -22,8 +22,7 @@
                             <button data-toggle="modal" data-target="#addedModal" class="modal-button-added"><img
                                     src="../../assets/images/add.svg" alt="">
                             </button>
-                            <a v-if="loggedIn" href="#" @click="goTologin(data)"><img src="../../assets/images/power.svg" alt="" width="40" height="40" style="color:red;"></a>
-                            <a v-if="!loggedIn" href="#" @click="goTologout(data)"><alt="" width="40" height="40" style="background-color:red;"></a>
+                            <a v-if="loggedIn" href="#" @click="goTologin(data)"><img src="../../assets/images/power.svg" alt="" width="40" height="40" style="color:red;"></a>                            
                         </div>
                     </div>
                     <div class="col-md-8 mt-1">
