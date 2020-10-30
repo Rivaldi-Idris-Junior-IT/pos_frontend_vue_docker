@@ -114,7 +114,7 @@
             }
         },
         mounted() {
-            axios.get("http://localhost:4500/backend/history/")
+            axios.get(process.env.VUE_APP_URL + `history/`)
                 .then((res) => {
                     this.data = res.data
                 })
