@@ -140,7 +140,7 @@
                                         <h6>Name</h6>
                                     </label>
                                     <div class="col-sm-10">
-                                        <input type="text" v-model="form.nama" name="" class="form-control" id="name">
+                                        <input type="text" v-model="form.nama" class="form-control" >
                                     </div>
                                 </div>
                                 <div class="form-group row mt-3">
@@ -152,7 +152,7 @@
                                             :style ="{'background-image' : `url(${previewImage})`}"
                                             @click ="selectImage">
                                         </div>
-                                        <input type="file" @input="pickFile" ref="fileInput"  class="form-control" id="image">
+                                        <input type="file" @input="pickFile" ref="fileInput"  class="form-control" >
                                     </div>
                                 </div>
                                 <div class="form-group row mt-3">
@@ -160,8 +160,7 @@
                                         <h6>Price</h6>
                                     </label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" v-model="form.harga" id="price"
-                                            name="price">
+                                        <input type="text" class="form-control" v-model="form.harga">
                                     </div>
                                 </div>
                                 <div class="form-group row mt-3">
@@ -169,8 +168,7 @@
                                         <h6>Stok</h6>
                                     </label>
                                     <div class="col-sm-10">
-                                        <input type="number" class="form-control" v-model="form.stok" id="stok"
-                                            name="stok">
+                                        <input type="number" class="form-control" v-model="form.stok" >
                                     </div>
                                 </div>
                                 <div class="form-group row mt-3">
@@ -178,14 +176,13 @@
                                         <h6>Category</h6>
                                     </label>
                                     <div class="col-sm-10">
-                                        <input type="number" class="form-control" v-model="form.kategori_id" id="stok"
-                                            name="stok">
+                                        <input type="number" class="form-control" v-model="form.kategori_id">
                                     </div>
                                 </div>
 
                                 <div class="buttons-modal-decision mb-3 float-right">
                                     <button type="button" style="margin-right:20px;" class="btn btn-modal-cancel" data-dismiss="modal">Cancel</button>
-                                    <button type="submit" @click="goToHomepage(data)" class="btn btn-modal-add" >Add</button>
+                                    <button type="submit" class="btn btn-modal-add" >Add</button>
                                 </div>
                             </form>
                         </div>
@@ -248,7 +245,7 @@
                                     </label>
                                     <div class="col-sm-10">
                                         <input type="number" class="form-control" v-model="edit_data.kategori_id"
-                                            id="stok" name="stok">
+                                            id="kategori_id" name="kategori_id">
                                     </div>
                                 </div>
 
@@ -397,16 +394,16 @@
             goTologout(data) {
                 this.$router.push({ path: "/logout", params: {data} })
             },
-            save() {
+            save(){
                 const productData = new FormData()
                 productData.append ('nama', this.form.nama)
-                productData.append ('harga', this.form.nama)
-                productData.append ('kategori_id', this.form.harga)
+                productData.append ('harga', this.form.harga)
+                productData.append ('kategori_id', this.form.kategori_id)
                 productData.append ('link_gambar', this.$refs.fileInput.files[0])
                 productData.append ('stok', this.form.stok)
                 const axiosConfig = { 
                     method : 'POST',
-                    url : process.env.VUE_APP_URL,
+                    url : process.env.VUE_APP_URL + 'product',
                     headers: {
                         'Content-Type' : 'multipart/form-data'
                     },
@@ -414,7 +411,7 @@
                 }
                 axios(axiosConfig)
                 .then(() => {
-                    this.load()
+                    this.showProduct()
                 })
                 .catch(err => {
                     console.log(err)
@@ -444,9 +441,8 @@
                 axios.delete(process.env.VUE_APP_URL+ `product/delete/${item.id}`)
                     .then(() => {   
                         alert('deleted')                     
-                        this.form.nama = ''
-                        this.clean()                        
-                        this.load()
+                        this.form.nama = ''                        
+                        this.showProduct()
                     })             
                     .catch(err => {
                         console.log(err)
@@ -525,17 +521,23 @@
             showImage(link_gambar) {                
             return `${process.env.VUE_APP_STATIC_URL}/${link_gambar}`;
             },
-        },
-        mounted() {
-            axios.get(process.env.VUE_APP_URL + `product/`)
+
+            showProduct(){
+                axios.get(process.env.VUE_APP_URL + `product/`)
                 .then((res) => {
                     this.data = res.data.result
                 })
                 .catch((err) => {
                     console.log(err)
                 })
+            }
+            
+        },
+        mounted() {
+            this.showProduct()
         },             
         computed: {
+
             filteredData: function () {
                 return this.data.filter((product) => {
                     return product.nama.match(this.search);
